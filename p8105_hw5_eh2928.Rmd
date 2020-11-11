@@ -5,7 +5,7 @@ date: "11/11/2020"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 #Load relevant libraries
@@ -29,5 +29,52 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+#Problem 1
+
+First things first, read in the data, describe it, and conduct some tidying. 
+
+```{r reading}
+homicide_df = 
+    read.csv("./data/homicide/homicide.csv")
+
+homicide_df %>% summary()
+```
+
+This raw dataset consists of `r homicide_df %>% nrows()` rows and `r homicide_df %>% ncols()` columns. Data are structured around individual-level homicide cases including an id number, and then details location, arrest/resolution information, and, often, demographic information regarding each victim. Several variables are not of a tidied data type (e.g. not a factor, or numeric, or date variable when this is prudent), and there is also missing data. 
+
+```{r reading}
+homicide_df = 
+    homicide_df %>% 
+  mutate(
+    city_state = str_c(city, ", ", state),
+    resolved = case_when(
+      disposition == "Closed without arrest" ~ "unresolved",
+      disposition == "Open/No arrest" ~ "unresolved",
+      disposition == "Closed by arrest" ~ "resolved"
+    )
+  ) %>% 
+  filter(city_state != "Tulsa, AL")
+
+homicide_df %>% 
+  group_by(city_state) %>% 
+  summarize(
+    homicide_total = n(),
+    homicide_unresolved = sum(resolved == "unresolved")
+  )
+
+
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
 
 

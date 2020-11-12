@@ -163,7 +163,10 @@ path_df =
 ggp_lda =
 path_df %>% 
   ggplot(aes(x = week_number, y = observed_value, group = path, color = arm)) + 
-  geom_line(alpha = .75) +
+  geom_line(alpha = .5) +
+  geom_smooth(
+    aes(x = week_number, y = observed_value, color = arm, group = arm), 
+        alpha = 1, inherit.aes = F, se = F) +
    scale_x_continuous(
     breaks = c(1, 2, 3, 4, 5, 6, 7, 8), 
     labels = c("Baseline", "2", "3", "4", "5", "6", "7", "Endline")) +
@@ -175,3 +178,4 @@ path_df %>%
 ggp_lda
 ```
 
+The plot appears to show the experimental arm and the control arm start from a similar baseline with respect to their observed values, but over time the control arm stays approximately the same while the experimental arm appears to increase. The smoothed averages for each group help illustrate this point. 

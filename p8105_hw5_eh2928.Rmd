@@ -131,9 +131,11 @@ path_df =
   tibble(
     path = list.files("./data/lda")
   ) %>% 
-  mutate(path = str_c("./data/lda/", path))
+  mutate(path = str_c("./data/lda/", path),
+         data = map(.x = path, ~read_csv(.x))
+         ) %>% 
+  unnest(data)
 ```
-Emil -- start with this mutate function and add a mapping line; map something across something to get the data next to the pathnames.
 
 
 

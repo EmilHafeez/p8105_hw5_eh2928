@@ -32,7 +32,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 #Problem 1
 
-First things first, read in the data, describe it, and conduct some tidying. 
+First things first, read in the data, and describe it.
 
 ```{r reading}
 homicide_df = 
@@ -41,9 +41,9 @@ homicide_df =
 homicide_df %>% summary()
 ```
 
-This raw dataset consists of `r homicide_df %>% nrows()` rows and `r homicide_df %>% ncols()` columns. Data are structured around individual-level homicide cases including an id number, and then details location, arrest/resolution information, and, often, demographic information regarding each victim. Several variables are not of a tidied data type (e.g. not a factor, or numeric, or date variable when this is prudent), and there is also missing data. 
+This raw dataset consists of `r homicide_df %>% nrow()` rows and `r homicide_df %>% ncol()` columns. Data are structured around individual-level homicide cases including an id number, and then details location, arrest/resolution information, and, often, demographic information regarding each victim. Several variables are not of a tidied data type (e.g. not a factor, or numeric, or date variable when this is prudent), and there is also missing data. 
 
-```{r reading}
+```{r mutations, include = FALSE}
 homicide_df = 
     homicide_df %>% 
   mutate(
@@ -55,20 +55,39 @@ homicide_df =
     )
   ) %>% 
   filter(city_state != "Tulsa, AL")
+```
 
-homicide_df %>% 
+Total number of homicides in each city, and the number of unsolved homicides.
+```{r homicide counter, message = F, warning = F, echo = FALSE}
+aggregate_df = 
+  homicide_df %>% 
   group_by(city_state) %>% 
   summarize(
     homicide_total = n(),
     homicide_unresolved = sum(resolved == "unresolved")
-  )
-
-
+  ) %>% arrange(desc(homicide_total))
+aggregate_df
 ```
 
-```{r}
+Let's estimate the proportion of homicides that are unsolved in Baltimore, MD.
+```{r prop.test, echo = FALSE}
+baltimore_prop_test = 
+  prop.test(
+  aggregate_df %>% filter(city_state == "Baltimore, MD") %>%  pull(homicide_unresolved),
+  aggregate_df %>% filter(city_state == "Baltimore, MD") %>%  pull(homicide_total)
+    ) %>% 
+  broom::tidy()
 
+baltimore_prop_test %>% 
+  mutate(
+    estimate = round(estimate, digits = 2),
+    conf.low = round(conf.low, digits = 2),
+    conf.high = round(conf.high, digits = 2),
+    baltimore_prop_result = str_c("Estimate: ", estimate, ", ", "Confidence Interval: (", conf.low, ",", conf.high, ")"),
+  ) %>% pull(baltimore_prop_result)
 ```
+
+Now run prop.test for each of the cities in your dataset, and extract both the proportion of unsolved homicides and the confidence interval for each. Do this within a “tidy” pipeline, making use of purrr::map, purrr::map2, list columns and unnest as necessary to create a tidy dataframe with estimated proportions and CIs for each city.
 
 
 

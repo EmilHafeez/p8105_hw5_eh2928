@@ -89,6 +89,33 @@ baltimore_prop_test %>%
 
 Now run prop.test for each of the cities in your dataset, and extract both the proportion of unsolved homicides and the confidence interval for each. Do this within a “tidy” pipeline, making use of purrr::map, purrr::map2, list columns and unnest as necessary to create a tidy dataframe with estimated proportions and CIs for each city.
 
+```{r iterate}
+#iterate the prop tests and tidied tests functions over each state to get a resulting df
+results_homicide_df =
+  aggregate_df %>% 
+  mutate(
+    prop_tests = map2(.x = homicide_unresolved, .y = homicide_total, ~ prop.test(x = .x, n = .y)),
+    tidied_tests = map(.x = prop_tests, ~broom::tidy(.x))
+  ) %>% 
+  select(-prop_tests) %>% 
+  unnest(tidied_tests) %>% 
+  select(city_state, estimate, conf.low, conf.high)
+```
+
+```{r ggplot}
+results_homicide_df %>% 
+  mutate(city_state = fct_reorder(city_state, estimate)) %>% 
+  ggplot(aes(x = city_state, y = estimate)) +
+  geom_point() + 
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = .25, hjust = 1)) +
+  scale_y_continuous(breaks = seq(0, 1, .05)) +
+  labs(
+    title = "Fig. 1: Estimates of the Proportion of Unsolved Homicides in US Cities",
+    x = "City",
+    y = "Proportion Estimate",
+    caption = "Homework 5")
+```
 
 
 

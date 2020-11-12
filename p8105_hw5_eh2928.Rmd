@@ -152,26 +152,26 @@ path_df =
     values_to = "observed_value"
   ) %>% 
   mutate(
-    week_number = str_replace(week_number, "week_", "")
+    week_number = str_replace(week_number, "week_", ""),
+    week_number = as.numeric((week_number)),
+    arm = as.factor(arm),
+    path = str_c(arm, "_", subject_id)
   )
-  
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```{r plot}
+ggp_lda =
+path_df %>% 
+  ggplot(aes(x = week_number, y = observed_value, group = path, color = arm)) + 
+  geom_line(alpha = .75) +
+   scale_x_continuous(
+    breaks = c(1, 2, 3, 4, 5, 6, 7, 8), 
+    labels = c("Baseline", "2", "3", "4", "5", "6", "7", "Endline")) +
+  labs(
+    title = "Observed Values over Time, per Participant",
+    x = "Week Number",
+    y = "Value",
+    caption = "Longitudinal Data Analysis Spaghetti Plot, Assignment 5") 
+ggp_lda
+```
 

@@ -280,8 +280,9 @@ sim_results %>%
     y = "Average Value of Sample Mean (mu_hat)",
     caption = "Assignment 5")
 ```
-Using only samples in which the null was rejected, the average estimate of the sample mean is not approximately equal to the true value of mu, especially until mu (true population mean) is 4 and above. This is likely the case because for mu is 4 and above, a larger number of samples find evidence to reject the null hypothesis, and are used in the estimation process after filtering. When we simulate larger population means,  the effect size and power are higher when the true population mean is high and the null hypothesis is that the mean is equal to 0 (holding sample size and standard deviation constant).  
+When we simulate larger population means,  the effect size and power are higher when the true population mean is high and the null hypothesis is that the mean is equal to 0 (holding sample size and standard deviation constant). 
 
+Therefore, using only samples in which the null was rejected, the average estimate of the sample mean is not approximately equal to the true value of mum until mu (true population mean) is 4 and above (and to some extent, is 3). This is likely the case because for the simulations when mu is 4 and above, a larger number of samples find evidence to reject the null hypothesis, and are used in the estimation process after filtering. By including more samples when taking the average, the average is more accurate to the true population mean. 
 
 
 

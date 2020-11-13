@@ -179,3 +179,49 @@ ggp_lda
 ```
 
 The plot appears to show the experimental arm and the control arm start from a similar baseline with respect to their observed values, but over time the control arm stays approximately the same while the experimental arm appears to increase. The smoothed averages for each group help illustrate this point. 
+
+# Problem 3
+
+Create the function
+
+```{r function creation}
+set.seed(27)
+sim_t_test = function(sample_size = 30, mu = 0, sigma = 5) {
+  
+  sim_data = tibble(
+    x = rnorm(n = sample_size, mean = mu, sd = sigma),
+  )
+  
+  t_test = t.test(sim_data, mu = 0)
+
+  sim_data %>% 
+    summarize(
+      mu_hat = mean(x),
+      p_value = pull(broom::tidy(t_test), p.value)
+    )
+}
+
+```
+
+Generate 5000 datasets from the model
+
+```{r iterate again}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

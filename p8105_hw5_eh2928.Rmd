@@ -229,10 +229,10 @@ sim_results %>%
   ) %>% 
   arrange(desc(proportion_rejected)) %>% 
   ggplot(aes(x = true_mu, y = proportion_rejected, color = proportion_rejected, group = true_mu)) + 
-  geom_point(alpha = 1, size = 2) +
+  geom_point(alpha = 1, size = 3) +
   scale_y_continuous(breaks = seq(0, 1, 0.1)) +
   labs(
-    title = "Simulating Power",
+    title = "Simulating Repeated Sampling for Power Demonstration",
     x = "Proportion of Simulations where Null Rejected",
     y = "True Mu",
     caption = "Simulations Power Plot, Assignment 5")
@@ -240,8 +240,26 @@ sim_results %>%
 
 Holding sample size and standard deviation constant, when the effect size increases, the power increases. 
 
-```{r plot 2}
 
+
+
+Make a plot showing the average estimate of μ̂  on the y axis and the true value of μ on the x axis. 
+```{r plot 2}
+sim_results %>% 
+  group_by(true_mu) %>% 
+  mutate(
+    estimate_mean = mean(mu_hat),
+    true_mu = as.factor(true_mu)
+  ) %>% 
+  arrange(desc(estimate_mean)) %>% 
+  ggplot(aes(x = true_mu, y = estimate_mean, color = true_mu, group = true_mu)) + 
+  geom_point(alpha = 1, size = 3) +
+  scale_y_continuous(breaks = seq(0, 7, 1)) +
+  labs(
+    title = "Estimating the Value of Mu via Repeated Sampling",
+    x = "Average Value of Sample Mean (mu_hat)",
+    y = "True Mu",
+    caption = "Assignment 5")
 ```
 
 
